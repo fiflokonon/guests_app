@@ -68,7 +68,7 @@ class Login extends StatelessWidget {
                 alignment: Alignment.topRight,
               ),
             ),
-            const ButtonWidget(text: "COnnexion",),
+            const ButtonWidget(text: "Connexion",),
             const SizedBox(
               height: 5,
             ),
