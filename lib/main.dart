@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
           // is not restarted.
           scaffoldBackgroundColor: const Color(0xFF19173D)
         ),
-      home:const Invitations(),
+      home:const Events(),
     );
   }
 }
