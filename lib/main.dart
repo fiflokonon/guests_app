@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:guests/screens/CreatEvent.dart';
 import 'package:guests/screens/CreatInvitation.dart';
+import 'package:guests/screens/EventDetails.dart';
 import 'package:guests/screens/Events.dart';
+import 'package:guests/screens/InvitationDetails.dart';
+import 'package:guests/screens/Invitations.dart';
 import 'package:guests/screens/Login.dart';
 import 'package:guests/screens/Notifications.dart';
 
@@ -28,10 +31,9 @@ class MyApp extends StatelessWidget {
           // or simply save your changes to "hot reload" in a Flutter IDE).
           // Notice that the counter didn't reset back to zero; the application
           // is not restarted.
-          scaffoldBackgroundColor: const Color(0xFF19173D),
-          //scaffoldBackgroundColor: const Color(0xFFFFFFFF)
+          scaffoldBackgroundColor: const Color(0xFF19173D)
         ),
-      home:const CreateInvitation(),
+      home:const Invitations(),
     );
   }
 }
