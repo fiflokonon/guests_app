@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:guests/utils.dart';
 import 'package:guests/widgets/ButtonWidget.dart';
 import 'package:guests/widgets/InputFormWidget.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+
+import '../controllers/events.dart';
 
 class CreatEvent extends StatefulWidget {
   const CreatEvent({super.key});
@@ -20,6 +22,7 @@ class _CreatEventState extends State<CreatEvent> {
   String endTime = "";
   TextEditingController eventNameController = TextEditingController();
   TextEditingController sloganController = TextEditingController();
+    TextEditingController descriptController = TextEditingController();
   TextEditingController logoController = TextEditingController();
   TextEditingController starTimeController = TextEditingController();
   TextEditingController starDayController = TextEditingController();
@@ -28,7 +31,6 @@ class _CreatEventState extends State<CreatEvent> {
   File? _photo;
   @override
   Widget build(BuildContext context) {
-    TextEditingController descriptController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -294,7 +296,7 @@ class _CreatEventState extends State<CreatEvent> {
               const SizedBox(
                 height: 30,
               ),
-              const ButtonWidget(text: "Créer l'événement")
+               ButtonWidget(text: "Créer l'événement", tap: () {Provider.of<EventController>(context, listen: false).create_Event(idUser: "1", titre: eventNameController.text, slogan: sloganController.text, description: descriptController.text, lieu: sloganController.text, date_de_debut: "${starDayController.text} à 14h", date_de_fin: "${endDayController.text} à 14h");},)
             ],
           ),
         ),

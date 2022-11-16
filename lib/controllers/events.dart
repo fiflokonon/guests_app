@@ -2,7 +2,19 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-class Events with ChangeNotifier{
+
+import '../models.dart/events.dart';
+class EventController with ChangeNotifier{
+   final String authToken;
+  final List<Event> _items;
+  // late String _addmessage = "";
+  // late bool _addError = false;
+  List<Event> get items {
+    return _items;
+  }
+  EventController(this.authToken, this._items
+      // , this._user
+      );
   
   static String url = "http://first.banjoocash.com";
 
@@ -13,6 +25,7 @@ class Events with ChangeNotifier{
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+          'Authorization': 'Bearer $authToken'
         },
       );
       final responseData = json.decode(response.body);
@@ -30,7 +43,7 @@ class Events with ChangeNotifier{
 
   Future <Map> create_Event(
       {
-      required String id,
+      required String idUser,
       required String titre,
       required String slogan,
       required String description,
@@ -41,10 +54,11 @@ class Events with ChangeNotifier{
       }) async{
         try {
       final response = await http.post(
-        Uri.parse('$url/users/$id/events'),
+        Uri.parse('$url/users/$idUser/events'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+          'Authorization': 'Bearer $authToken'
         },
         encoding: Encoding.getByName("utf-8"),
         body: json.encode({
@@ -57,7 +71,7 @@ class Events with ChangeNotifier{
         }),
       );
       final responseData = json.decode(response.body);
-      print("===== $responseData");
+      print("==create event=== $responseData");
       Map data = {
         "error": responseData['error'],
         "message": responseData['message']

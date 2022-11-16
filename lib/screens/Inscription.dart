@@ -126,7 +126,7 @@ class _SignupState extends State<Signup> {
               const SizedBox(
                 height: 20,
               ),
-              const ButtonWidget(text: "Inscription"),
+               ButtonWidget(text: "Inscription", tap: () {  },),
               FittedBox(
                 child: Row(
                   // ignore: sort_child_properties_last

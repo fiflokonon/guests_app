@@ -1,6 +1,7 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:guests/screens/Events.dart';
+import '../controllers/auth.dart';
 import '../widgets/ButtonWidget.dart';
 import '../widgets/InputFormWidget.dart';
 
@@ -12,6 +13,7 @@ class Login extends StatelessWidget {
     // ignore: prefer_const_constructors
     TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
+    GlobalKey formKey = GlobalKey<FormState>();
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(16.0),
@@ -36,19 +38,25 @@ class Login extends StatelessWidget {
             const SizedBox(
               height: 40,
             ),
-            InputFormWidget(
-              nameController: emailController,
-              label: 'Entrez votre email',
-              obscure: false,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            InputFormWidget(
-              nameController: passwordController,
-              label: 'Entrez votre mot de passord',
-              obscure: true,
-            ),
+            Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    InputFormWidget(
+                      nameController: emailController,
+                      label: 'Entrez votre email',
+                      obscure: false,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    InputFormWidget(
+                      nameController: passwordController,
+                      label: 'Entrez votre mot de passord',
+                      obscure: true,
+                    ),
+                  ],
+                )),
             const SizedBox(
               height: 5,
             ),
@@ -68,28 +76,47 @@ class Login extends StatelessWidget {
                 alignment: Alignment.topRight,
               ),
             ),
-            const ButtonWidget(text: "Connexion",),
+            ButtonWidget(
+              text: "Connexion",
+              tap: () {
+                var login = AuthController()
+                // .get_all_users();
+                .login(
+                    email: emailController.text,
+                    password: passwordController.text);
+                login.then((value) => 
+                // value ? 
+                Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                        return const Events();
+                      }))
+                    // : null
+                    );
+              },
+            ),
             const SizedBox(
               height: 5,
             ),
-            Row(
-              // ignore: sort_child_properties_last
-              children: [
-                const Text(
-                  'Vous n\'avez pas de compte ?',
-                  style: TextStyle(color: Colors.white, fontFamily: "Poppins"),
-                ),
-                TextButton(
-                  child: const Text(
-                    'Inscrivez-vous',
-                    style: TextStyle(fontSize: 15, fontFamily: "Poppins"),
+            FittedBox(
+              child: Row(
+                // ignore: sort_child_properties_last
+                children: [
+                  const Text(
+                    'Vous n\'avez pas de compte ?',
+                    style: TextStyle(color: Colors.white, fontFamily: "Poppins"),
                   ),
-                  onPressed: () {
-                    //signup screen
-                  },
-                )
-              ],
-              mainAxisAlignment: MainAxisAlignment.center,
+                  TextButton(
+                    child: const Text(
+                      'Inscrivez-vous',
+                      style: TextStyle( fontFamily: "Poppins"),
+                    ),
+                    onPressed: () {
+                      //signup screen
+                    },
+                  )
+                ],
+                mainAxisAlignment: MainAxisAlignment.center,
+              ),
             ),
           ]),
         ),

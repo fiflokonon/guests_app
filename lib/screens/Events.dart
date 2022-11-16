@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:guests/screens/CreatEvent.dart';
 
 class Events extends StatelessWidget {
   const Events({super.key});
@@ -143,10 +144,13 @@ class Events extends StatelessWidget {
           )
         ],
       ),
-      floatingActionButton: const FloatingActionButton(
-        backgroundColor: Color.fromRGBO(32, 49, 92, 1),
-        onPressed: null,
-        child: Icon(Icons.add),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color.fromRGBO(32, 49, 92, 1),
+        onPressed: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                        return const CreatEvent();
+                      })),
+        child: const Icon(Icons.add),
       ),
       bottomNavigationBar: Theme(
           data: Theme.of(context).copyWith(

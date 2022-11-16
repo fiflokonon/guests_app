@@ -202,7 +202,7 @@ class _CreateInvitationState extends State<CreateInvitation> {
             const SizedBox(
               height: 5,
             ),
-            const ButtonWidget(text: "Créer l'invitation")
+             ButtonWidget(text: "Créer l'invitation", tap: () {  },)
           ],
         ),
       ),

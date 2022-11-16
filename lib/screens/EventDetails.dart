@@ -11,12 +11,13 @@ class EventDetails extends StatefulWidget {
 }
 
 class _EventDetailsState extends State<EventDetails> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         elevation: 0.0,
-        backgroundColor: Color(0xFF19173D),
+        backgroundColor: const Color(0xFF19173D),
         leading: IconButton(
             onPressed: () {
               //Back
@@ -31,11 +32,11 @@ class _EventDetailsState extends State<EventDetails> {
         ),
         actions: [
             PopupMenuButton(
-              color: Color(0xFF19173D),
+              color: const Color(0xFF19173D),
               itemBuilder: ((context)=>[
-              PopupMenuItem(child: Row(children: [Icon(Icons.add,color: Colors.white,), SizedBox(width: 5,), Text("Ajouter une invitation", style: TextStyle(color: Colors.white,),)],)),
-              PopupMenuItem(child: Row(children: [Icon(Icons.list_alt,color: Colors.white,), SizedBox(width: 5,), Text("Les invitations", style: TextStyle(color: Colors.white,)),],)),
-              PopupMenuItem(child: Row(children: [Icon(Icons.edit ,color: Colors.white,), SizedBox(width: 5,), Text("Editer l'événement", style: TextStyle(color: Colors.white,),)],)),
+              PopupMenuItem(child: Row(children: const [Icon(Icons.add,color: Colors.white,), SizedBox(width: 5,), Text("Ajouter une invitation", style: TextStyle(color: Colors.white,),)],)),
+              PopupMenuItem(child: Row(children: const [Icon(Icons.list_alt,color: Colors.white,), SizedBox(width: 5,), Text("Les invitations", style: TextStyle(color: Colors.white,)),],)),
+              PopupMenuItem(child: Row(children: const [Icon(Icons.edit ,color: Colors.white,), SizedBox(width: 5,), Text("Editer l'événement", style: TextStyle(color: Colors.white,),)],)),
 
         ]))
         ],
@@ -141,7 +142,7 @@ class _EventDetailsState extends State<EventDetails> {
             const SizedBox(
               height: 50,
             ),
-            const ButtonWidget(text: "Voir les statistiques")
+             ButtonWidget(text: "Voir les statistiques", tap: () {  },)
           ],
         ),
       ),

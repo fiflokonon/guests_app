@@ -1,4 +1,4 @@
-class Events {
+class Event {
   final int id;
   final String titre,
       slogan,
@@ -9,7 +9,7 @@ class Events {
       id_utilisateur,
       created_at;
 
-  Events(
+  Event(
       {required this.id,
       required this.titre,
       required this.slogan,
