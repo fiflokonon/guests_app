@@ -18,7 +18,7 @@ class AuthController with ChangeNotifier {
     return _token;
   }
 
-  Future<Map> register(
+  Future<bool> register(
       {required String lastname,
       required String firstname,
       required String sexe,
@@ -28,27 +28,39 @@ class AuthController with ChangeNotifier {
     try {
       final response = await http.post(
         Uri.parse('$url/register'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        encoding: Encoding.getByName("utf-8"),
+        // headers: {
+        //   'Content-Type': 'application/json',
+        //   'Accept': 'application/json',
+        // },
+        // encoding: Encoding.getByName("utf-8"),
         body: json.encode({
           "email": email,
-          "contact": contact,
+          "tel": contact,
           "sexe": sexe,
-          "lastname": lastname,
-          "firstname": firstname,
-          "password": password,
+          "nom": lastname,
+          "prenoms": firstname,
+          "mot_de_passe": password,
         }),
       );
       final responseData = json.decode(response.body);
       print("===== $responseData");
-      Map data = {
-        "error": responseData['error'],
-        "message": responseData['message']
-      };
-      return data;
+      try {
+        _user = User(
+            id: responseData[0]['id'],
+            statut: responseData[0]['statut'],
+            prenoms: responseData[0]['prenoms'],
+            nom: responseData[0]['nom'],
+            sexe: responseData[0]['sexe'],
+            email: responseData[0]['email'],
+            tel: responseData[0]['tel'],
+            mot_de_passe: responseData[0]['mot_de_passe'],
+            created_at: responseData[0]['created_at']);
+            notifyListeners();
+        return true;      
+      } catch (e) {
+        return false;
+      }
+      
     } catch (error) {
       print("*** error $error");
       rethrow;
@@ -85,11 +97,13 @@ class AuthController with ChangeNotifier {
             tel: responseData['user']['tel'],
             mot_de_passe: responseData['user']['mot_de_passe'],
             created_at: responseData['user']['created_at']);
+            print('token is ==== $token');
+            print("user model ====== ${user.email}");
+            notifyListeners();
             return true;
       }else{
         return false;
       }
-
       
     } catch (error) {
       print("*** error $error");

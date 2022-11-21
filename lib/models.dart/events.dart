@@ -1,12 +1,11 @@
 class Event {
-  final int id;
+  final int id, id_utilisateur;
   final String titre,
       slogan,
       description,
       lieu,
       date_de_debut,
       date_de_fin,
-      id_utilisateur,
       created_at;
 
   Event(

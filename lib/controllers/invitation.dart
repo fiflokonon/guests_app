@@ -1,28 +1,49 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:guests/models.dart/invitations.dart';
 import 'package:http/http.dart' as http;
 
-class Invitation with ChangeNotifier {
+class InvitationController with ChangeNotifier {
+String authToken;
+  List<Invitation> _items = [];
+  // late String _addmessage = "";
+  // late bool _addError = false;
+  List<Invitation> get items {
+    return _items;
+  }
+  InvitationController(this.authToken, this._items
+      // , this._user
+      );
+  
+  static String url = "http://first.banjoocash.com/api";
 
-  static String url = "http://first.banjoocash.com";
-
-    Future <Map> get_All_Invitations() async{
+    Future <List <Invitation>> get_All_Invitations() async{
         try {
       final response = await http.get(
         Uri.parse('$url/invitations-list'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
+        headers: {          
+          "Authorization": "Bearer $authToken"
         },
       );
       final responseData = json.decode(response.body);
       print("===== $responseData");
-      Map data = {
-        "error": responseData['error'],
-        "message": responseData['message']
-      };
-      return data;
+      List <Invitation> invitationList = [];
+      for (var invitation in responseData) {
+        invitationList.add(Invitation(
+          id: invitation['id'], 
+          id_evenement: invitation["id_evenement"], 
+          place: invitation["place"], 
+          retour: invitation["retour"], 
+          statut_envoye: invitation["statut_envoye"], 
+          nom_prenoms: invitation["nom_prenoms"], 
+          lien_carte: invitation["lien_carte"], 
+          lien_code: invitation["lien_code"], 
+          created_at: invitation["created_at"]));
+      }
+      _items = invitationList;
+      notifyListeners();
+      return _items;
     } catch (error) {
       print("*** error $error");
       rethrow;

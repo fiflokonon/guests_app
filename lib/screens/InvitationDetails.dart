@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class InvitationDetails extends StatelessWidget {
   const InvitationDetails({super.key});
@@ -35,7 +33,7 @@ class InvitationDetails extends StatelessWidget {
       body: Container(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          children: [
+          children: const [
             
           ],
         ),

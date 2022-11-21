@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:guests/screens/Events.dart';
+import 'package:provider/provider.dart';
 import '../controllers/auth.dart';
 import '../widgets/ButtonWidget.dart';
 import '../widgets/InputFormWidget.dart';
@@ -79,19 +80,20 @@ class Login extends StatelessWidget {
             ButtonWidget(
               text: "Connexion",
               tap: () {
-                var login = AuthController()
+                var login = Provider.of<AuthController>(context, listen: false)
                 // .get_all_users();
                 .login(
                     email: emailController.text,
                     password: passwordController.text);
                 login.then((value) => 
-                // value ? 
+                value == true ? 
                 Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                         return const Events();
                       }))
-                    // : null
+                    : null
                     );
+                    // Provider.of<EventController>(context, listen: false).events_list();
               },
             ),
             const SizedBox(

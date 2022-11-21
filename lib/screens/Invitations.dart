@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:guests/models.dart/invitations.dart';
+import 'package:provider/provider.dart';
+
+import '../controllers/invitation.dart';
 
 class Invitations extends StatelessWidget {
   const Invitations({super.key});
@@ -25,11 +27,11 @@ class Invitations extends StatelessWidget {
             )),
         actions: [
           PopupMenuButton(
-              color: Color(0xFF19173D),
+              color: const Color(0xFF19173D),
               itemBuilder: ((context) => [
                     PopupMenuItem(
                         child: Row(
-                      children: [
+                      children: const [
                         Icon(
                           Icons.add,
                           color: Colors.white,
@@ -50,42 +52,58 @@ class Invitations extends StatelessWidget {
         elevation: 0.0,
         backgroundColor: const Color(0xFF19173D),
       ),
-      body: ListView.builder(
-        itemCount: 5,
-        itemBuilder: ((context, index) =>
-              Container(
-        padding: const EdgeInsets.all(7.0),
-        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-        decoration: BoxDecoration(
-            color: const Color.fromRGBO(38, 36, 80, 1),
-            borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Icon(
-                      Icons.mark_email_unread,
-                      color: Color(0xFF0DA6C2),
-                    ),
-                    const Text("KABI Emmanuel", 
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: "Poppins",
-                      fontWeight: FontWeight.bold
-                    ),),
-                    IconButton(onPressed: () {
-                      //Delete
-                    }, icon: const Icon(Icons.send_outlined,
-                    color: Color(0xFF0DA6C2),))
-                  ],
-                ),
-              ],
-            )
-            )
-         )),
+      body: FutureBuilder(
+          future: Provider.of<InvitationController>(context, listen: true)
+              .get_All_Invitations(),
+          initialData:
+              Provider.of<InvitationController>(context, listen: true).items,
+          builder: (context, snapshot) {
+            List<Invitation> invitationList =
+                Provider.of<InvitationController>(context, listen: false).items;
+            return invitationList.isEmpty
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : ListView.builder(
+                    itemCount: invitationList.length,
+                    itemBuilder: ((context, index) => Container(
+                        padding: const EdgeInsets.all(7.0),
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 4, horizontal: 8),
+                        decoration: BoxDecoration(
+                          color: const Color.fromRGBO(38, 36, 80, 1),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Icon(
+                                  Icons.mark_email_unread,
+                                  color: Color(0xFF0DA6C2),
+                                ),
+                                 Text(
+                                  invitationList[index].nom_prenoms,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: "Poppins",
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                IconButton(
+                                    onPressed: () {
+                                      //Delete
+                                    },
+                                    icon: const Icon(
+                                      Icons.send_outlined,
+                                      color: Color(0xFF0DA6C2),
+                                    ))
+                              ],
+                            ),
+                          ],
+                        ))));
+          }),
     );
   }
 }

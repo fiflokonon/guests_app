@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:guests/controllers/events.dart';
 import 'package:guests/widgets/ButtonWidget.dart';
+import 'package:provider/provider.dart';
+
+import '../models.dart/events.dart';
 
 class EventDetails extends StatefulWidget {
-  const EventDetails({super.key});
+  final int eventId; 
+  const EventDetails({super.key, required this.eventId});
 
   @override
   State<EventDetails> createState() => _EventDetailsState();
@@ -13,6 +16,10 @@ class EventDetails extends StatefulWidget {
 class _EventDetailsState extends State<EventDetails> {
   @override
   Widget build(BuildContext context) {
+    Event event = Provider.of<EventController>(context, listen: true)
+        .items
+        .where((element) => element.id == widget.eventId)
+        .first;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -48,11 +55,11 @@ class _EventDetailsState extends State<EventDetails> {
             const SizedBox(
               height: 10,
             ),
-            const Align(
+             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                "Titre de l'événement",
-                style: TextStyle(
+                event.titre,
+                style: const TextStyle(
                     color: Colors.white,
                     fontFamily: "Oleo_Script",
                     fontSize: 24),
@@ -88,9 +95,9 @@ class _EventDetailsState extends State<EventDetails> {
             ),
             Container(
               alignment: Alignment.center,
-              child: const Text(
-                "Description de l'événement",
-                style: TextStyle(color: Colors.white, fontFamily: "Poppins"),
+              child:  Text(
+                event.description,
+                style: const TextStyle(color: Colors.white, fontFamily: "Poppins"),
               ),
             ),
             const SizedBox(
@@ -99,17 +106,17 @@ class _EventDetailsState extends State<EventDetails> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               // ignore: prefer_const_literals_to_create_immutables
-              children: const [
+              children: [
                 Text(
-                  "Debut: 17/52/25",
-                  style: TextStyle(
+                  "Debut: ${event.date_de_debut.substring(0,10)}",
+                  style: const TextStyle(
                       color: Color.fromRGBO(123, 120, 170, 1),
                       fontWeight: FontWeight.w600,
                       fontFamily: "Poppins"),
                 ),
                 Text(
-                  "Heure: 14:20",
-                  style: TextStyle(
+                  "Heure: ${event.date_de_debut.substring(10,16)}",
+                  style: const TextStyle(
                       color: Color.fromRGBO(123, 120, 170, 1),
                       fontFamily: "Poppins",
                       fontWeight: FontWeight.w600),
@@ -122,17 +129,17 @@ class _EventDetailsState extends State<EventDetails> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               // ignore: prefer_const_literals_to_create_immutables
-              children: const [
+              children:  [
                 Text(
-                  "Fin: 17/52/25",
-                  style: TextStyle(
+                  "Fin: ${event.date_de_debut.substring(0,10)}",
+                  style: const TextStyle(
                       color: Color.fromRGBO(123, 120, 170, 1),
                       fontFamily: "Poppins",
                       fontWeight: FontWeight.w600),
                 ),
                 Text(
-                  "Heure: 14:00",
-                  style: TextStyle(
+                  "Heure: ${event.date_de_debut.substring(10,16)}",
+                  style: const TextStyle(
                       color: Color.fromRGBO(123, 120, 170, 1),
                       fontFamily: "Poppins",
                       fontWeight: FontWeight.w600),

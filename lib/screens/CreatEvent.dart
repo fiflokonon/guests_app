@@ -22,7 +22,7 @@ class _CreatEventState extends State<CreatEvent> {
   String endTime = "";
   TextEditingController eventNameController = TextEditingController();
   TextEditingController sloganController = TextEditingController();
-    TextEditingController descriptController = TextEditingController();
+  TextEditingController descriptController = TextEditingController();
   TextEditingController logoController = TextEditingController();
   TextEditingController starTimeController = TextEditingController();
   TextEditingController starDayController = TextEditingController();
@@ -87,6 +87,7 @@ class _CreatEventState extends State<CreatEvent> {
                             .then((value) {
                           setState(() {
                             starDay = value!.toString().substring(0, 10);
+                            
                           });
                         });
                       },
@@ -264,39 +265,56 @@ class _CreatEventState extends State<CreatEvent> {
                   });
                 }),
                 child: Container(
-                  height: 50,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(color: Colors.white, width: 2.0),
-                  ),
-                  child: Center(
-                        child: _photo == null
-                      ?const Text(
-                            "Logo de l'événement(Optionnel)",
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 192, 182, 182),
-                                fontFamily: "Poppins",
-                                fontSize: 15),
-                          )
-                      : Text("link: ${_photo!.path}",
-                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: "Poppins",
-                                        fontSize: 15),),
-                      )
-                ),
+                    height: 50,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(color: Colors.white, width: 2.0),
+                    ),
+                    child: Center(
+                      child: _photo == null
+                          ? const Text(
+                              "Logo de l'événement(Optionnel)",
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 192, 182, 182),
+                                  fontFamily: "Poppins",
+                                  fontSize: 15),
+                            )
+                          : Text(
+                              "link: ${_photo!.path}",
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: "Poppins",
+                                  fontSize: 15),
+                            ),
+                    )),
               ),
               const SizedBox(
                 height: 20,
               ),
-              InputFormWidget(nameController: descriptController, 
-              label: "Description de l'événement", 
-              obscure: false, maxLines: 3,),
+              InputFormWidget(
+                nameController: descriptController,
+                label: "Description de l'événement",
+                obscure: false,
+                maxLines: 3,
+              ),
               const SizedBox(
                 height: 30,
               ),
-               ButtonWidget(text: "Créer l'événement", tap: () {Provider.of<EventController>(context, listen: false).create_Event(idUser: "1", titre: eventNameController.text, slogan: sloganController.text, description: descriptController.text, lieu: sloganController.text, date_de_debut: "${starDayController.text} à 14h", date_de_fin: "${endDayController.text} à 14h");},)
+              ButtonWidget(
+                text: "Créer l'événement",
+                tap: () {
+                  Provider.of<EventController>(context, listen: false)
+                      .create_Event(
+                          idUser: "1",
+                          titre: eventNameController.text,
+                          slogan: sloganController.text,
+                          description: descriptController.text,
+                          lieu: sloganController.text,
+                          date_de_debut: starDay,
+                          date_de_fin: endDay);
+                },
+              )
             ],
           ),
         ),

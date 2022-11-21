@@ -19,10 +19,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(providers: [
           ChangeNotifierProvider.value(
             value: AuthController(),
-          ),          
-          // ChangeNotifierProvider.value(
-          //   value: EventController(),
-          // ),
+          ),
           ChangeNotifierProxyProvider<AuthController, EventController>(
               create: (ctx) => EventController('', []),
               update: (ctx, auth, previousEvents) => EventController(
@@ -30,14 +27,19 @@ class MyApp extends StatelessWidget {
                   previousEvents!.items.isNotEmpty
                       ? previousEvents.items
                       : [])),
-    ],child: MaterialApp(
+    ],
+    child: Consumer<AuthController>(builder: (ctx, auth, _){
+    return 
+    MaterialApp(
       title: 'Guests',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          scaffoldBackgroundColor: const Color(0xFF19173D)
+          scaffoldBackgroundColor: const Color(0xFF19173D),
+          fontFamily: "Poppins"
         ),
       home:const Login(),
-    ),
+    )
+    ;}),
     );
   }
 }
