@@ -37,7 +37,7 @@ class _CreatEventState extends State<CreatEvent> {
         backgroundColor: const Color(0xFF19173D),
         centerTitle: true,
         leading: IconButton(
-            onPressed: () {},
+            onPressed: () { Navigator.pop(context);},
             icon: const Icon(
               Icons.arrow_back_ios_new_sharp,
               color: Colors.white,
@@ -304,15 +304,21 @@ class _CreatEventState extends State<CreatEvent> {
               ButtonWidget(
                 text: "Créer l'événement",
                 tap: () {
-                  Provider.of<EventController>(context, listen: false)
+                 var event = Provider.of<EventController>(context, listen: false)
                       .create_Event(
                           idUser: "1",
                           titre: eventNameController.text,
                           slogan: sloganController.text,
                           description: descriptController.text,
                           lieu: sloganController.text,
-                          date_de_debut: starDay,
-                          date_de_fin: endDay);
+                          date_de_debut: "$starDay $starTime",
+                          date_de_fin: "$endDay $endTime");
+                  event.then((value) {
+                    if(value==true){
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Evenement creer")));
+                      return Navigator.pop(context);
+                    }
+                  } );
                 },
               )
             ],

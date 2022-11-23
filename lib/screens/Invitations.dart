@@ -3,9 +3,11 @@ import 'package:guests/models.dart/invitations.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/invitation.dart';
+import 'CreatInvitation.dart';
 
 class Invitations extends StatelessWidget {
-  const Invitations({super.key});
+  final int eventId;
+  const Invitations({required this.eventId,super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,8 @@ class Invitations extends StatelessWidget {
               fontWeight: FontWeight.w700),
         ),
         leading: IconButton(
-            onPressed: () {},
+            onPressed: () =>
+              Navigator.pop(context),
             icon: const Icon(
               Icons.arrow_back_ios_new_sharp,
               color: Colors.white,
@@ -29,7 +32,12 @@ class Invitations extends StatelessWidget {
           PopupMenuButton(
               color: const Color(0xFF19173D),
               itemBuilder: ((context) => [
-                    PopupMenuItem(
+                    PopupMenuItem(onTap: (){Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) {
+                                    return CreateInvitation(eventId: eventId);
+                                  }),
+                                );},
                         child: Row(
                       children: const [
                         Icon(
@@ -53,10 +61,9 @@ class Invitations extends StatelessWidget {
         backgroundColor: const Color(0xFF19173D),
       ),
       body: FutureBuilder(
-          future: Provider.of<InvitationController>(context, listen: true)
-              .get_All_Invitations(),
+          future: Provider.of<InvitationController>(context, listen: true).event_Invitations(idEvent: eventId.toString()),
           initialData:
-              Provider.of<InvitationController>(context, listen: true).items,
+              Provider.of<InvitationController>(context, listen: false).items,
           builder: (context, snapshot) {
             List<Invitation> invitationList =
                 Provider.of<InvitationController>(context, listen: false).items;
@@ -84,7 +91,7 @@ class Invitations extends StatelessWidget {
                                   Icons.mark_email_unread,
                                   color: Color(0xFF0DA6C2),
                                 ),
-                                 Text(
+                                Text(
                                   invitationList[index].nom_prenoms,
                                   style: const TextStyle(
                                       color: Colors.white,

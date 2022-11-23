@@ -60,7 +60,7 @@ class EventController with ChangeNotifier{
     }
       }
 
-  Future <Event> create_Event(
+  Future <bool> create_Event(
       {
       required String idUser,
       required String titre,
@@ -106,30 +106,44 @@ class EventController with ChangeNotifier{
       //   "message": responseData['message']
       // };
       _items.add(event);
-      return event;
+      notifyListeners();
+      return true;
     } catch (error) {
       print("*** error $error");
-      rethrow;
+      return false;
     }
       }
 
   
-  Future <Map> get_User_Events_List({required String id}) async{
+  Future <List<Event>> get_User_Events_List({required int id}) async{
         try {
       final response = await http.get(
         Uri.parse('$url/users/$id/events'),
         headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          "Authorization": "Bearer $authToken"
         },
       );
       final responseData = json.decode(response.body);
-      print("===== $responseData");
-      Map data = {
-        "error": responseData['error'],
-        "message": responseData['message']
-      };
-      return data;
+      print("===== user event list");
+      List<Event> events = [];
+      for (var event in responseData) {
+        // create event
+        events.add(Event(
+        id: event['id'], 
+        titre: event['titre'], 
+        slogan: event['slogan'], 
+        description: event['description'], 
+        lieu: event['lieu'], 
+        date_de_debut: event['date_de_debut'], 
+        date_de_fin: event['date_de_fin'], 
+        id_utilisateur: event['id_utilisateur'], 
+        created_at: event['created_at']));
+        // add event
+        // _items.add(data);
+      }
+      _items = events;
+      notifyListeners();
+      return _items;
     } catch (error) {
       print("*** error $error");
       rethrow;

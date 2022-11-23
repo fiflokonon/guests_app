@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:guests/screens/Events.dart';
+import 'package:guests/screens/Inscription.dart';
 import 'package:provider/provider.dart';
 import '../controllers/auth.dart';
 import '../widgets/ButtonWidget.dart';
@@ -114,6 +115,10 @@ class Login extends StatelessWidget {
                     ),
                     onPressed: () {
                       //signup screen
+                      Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                        return const Signup();
+                      }));
                     },
                   )
                 ],

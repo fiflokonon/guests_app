@@ -37,7 +37,7 @@ String authToken;
           retour: invitation["retour"], 
           statut_envoye: invitation["statut_envoye"], 
           nom_prenoms: invitation["nom_prenoms"], 
-          lien_carte: invitation["lien_carte"], 
+          lien_carte: invitation["lien_carte"].toString(), 
           lien_code: invitation["lien_code"], 
           created_at: invitation["created_at"]));
       }
@@ -50,35 +50,46 @@ String authToken;
     }
       }
 
-Future <Map> create_Invitation(
+Future <bool> create_Invitation(
       {
-        required String id,
+        required int idEvent,
         required String nom_prenoms,
       required int place
       }) async{
         try {
       final response = await http.post(
-        Uri.parse('$url/events/$id/invitations'),
+        Uri.parse('$url/events/$idEvent/invitations'),
         headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          "Authorization": "Bearer $authToken"
         },
-        encoding: Encoding.getByName("utf-8"),
-        body: json.encode({
+        // encoding: Encoding.getByName("utf-8"),
+        body: {
           "nom_prenoms": nom_prenoms,
           "place": place,
-        }),
+        },
       );
-      final responseData = json.decode(response.body);
-      print("===== $responseData");
-      Map data = {
-        "error": responseData['error'],
-        "message": responseData['message']
-      };
-      return data;
+      final invitation = json.decode(response.body);
+      print("===== $invitation");
+      try {
+        Invitation data = Invitation(
+          id: invitation[0]['id'], 
+          id_evenement: invitation[0]["id_evenement"], 
+          place: invitation[0]["place"], 
+          retour: invitation[0]["retour"], 
+          statut_envoye: invitation[0]["statut_envoye"], 
+          nom_prenoms: invitation[0]["nom_prenoms"], 
+          lien_carte: invitation[0]["lien_carte"].toString(), 
+          lien_code: invitation[0]["lien_code"], 
+          created_at: invitation[0]["created_at"]);
+          _items.add(data);
+          notifyListeners();
+      return true;
+      } catch (e) {
+        return false;
+      }
     } catch (error) {
       print("*** error $error");
-      rethrow;
+      return false;
     }
       }
 
@@ -105,22 +116,33 @@ Future <Map> create_Invitation(
     }
       }
 
-Future <Map> event_Invitations({required String id}) async{
+Future <List<Invitation>> event_Invitations({required String idEvent}) async{
         try {
       final response = await http.get(
-        Uri.parse('$url/events/$id/invitations'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
+        Uri.parse('$url/events/$idEvent/invitations'),
+        
+        headers: {          
+          "Authorization": "Bearer $authToken"
         },
       );
       final responseData = json.decode(response.body);
       print("===== $responseData");
-      Map data = {
-        "error": responseData['error'],
-        "message": responseData['message']
-      };
-      return data;
+      List <Invitation> invitationList = [];
+      for (var invitation in responseData) {
+        invitationList.add(Invitation(
+          id: invitation['id'], 
+          id_evenement: invitation["id_evenement"], 
+          place: invitation["place"], 
+          retour: invitation["retour"], 
+          statut_envoye: invitation["statut_envoye"], 
+          nom_prenoms: invitation["nom_prenoms"], 
+          lien_carte: invitation["lien_carte"].toString(), 
+          lien_code: invitation["lien_code"], 
+          created_at: invitation["created_at"]));
+      }
+      _items = invitationList;
+      notifyListeners();
+      return _items;
     } catch (error) {
       print("*** error $error");
       rethrow;

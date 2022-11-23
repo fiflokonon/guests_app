@@ -1,15 +1,94 @@
 import 'package:flutter/material.dart';
+import 'package:guests/screens/CreatEvent.dart';
 import 'package:guests/screens/EventDetails.dart';
+import 'package:guests/screens/Profile.dart';
 import 'package:provider/provider.dart';
 
+import '../controllers/auth.dart';
 import '../controllers/events.dart';
 import '../models.dart/events.dart';
+import '../models.dart/user.dart';
+import 'Notifications.dart';
 
-class Events extends StatelessWidget {
+class Events extends StatefulWidget {
   const Events({super.key});
 
   @override
+  State<Events> createState() => _EventsState();
+}
+List screen = [
+  const EventScreen(),const Notifs(),const EventScreen(),const Profile()
+];
+class _EventsState extends State<Events> {
+  @override
   Widget build(BuildContext context) {
+    int currentScreen = 0;
+    return Scaffold(
+      body: screen[currentScreen],
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color.fromRGBO(32, 49, 92, 1),
+        onPressed: () =>
+            // Provider.of<EventController>(context, listen: false).events_list(),
+        Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                        return const CreatEvent();
+                      })),
+        child: const Icon(Icons.add),
+      ),
+      bottomNavigationBar: Theme(
+          data: Theme.of(context).copyWith(
+              canvasColor:
+                  const Color.fromARGB(255, 70, 66, 131).withOpacity(0.5)),
+          child: BottomNavigationBar(
+            currentIndex: currentScreen,
+            onTap: (value) => setState(() {
+              currentScreen = value;
+            }),
+              elevation: 1,
+              backgroundColor: const Color.fromARGB(255, 53, 43, 241),
+              fixedColor: const Color.fromARGB(255, 21, 190, 182),
+              selectedIconTheme: const IconThemeData(shadows: [
+                Shadow(
+                    color: Color.fromARGB(255, 21, 190, 182),
+                    offset: Offset(-2, 2),
+                    blurRadius: 15.0),
+                Shadow(
+                    color: Color.fromARGB(255, 21, 190, 182),
+                    offset: Offset(2, -2),
+                    blurRadius: 15.0)
+              ]),
+              selectedLabelStyle: const TextStyle(shadows: [
+                Shadow(
+                    color: Color.fromARGB(255, 21, 190, 182),
+                    offset: Offset(-2, 2),
+                    blurRadius: 15.0),
+                Shadow(
+                    color: Color.fromARGB(255, 21, 190, 182),
+                    offset: Offset(2, -2),
+                    blurRadius: 15.0)
+              ]),
+              items: const [
+                BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.notifications), label: "Notif"),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.settings), label: "Settings"),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.person), label: "Profil"),
+              ])),
+    );
+  }
+}
+
+class EventScreen extends StatelessWidget {
+  const EventScreen({
+    Key? key,
+  }) : super(key: key);
+
+
+  @override
+  Widget build(BuildContext context) {
+    User user = Provider.of<AuthController>(context, listen: false).user;
     return Scaffold(
       backgroundColor: const Color(0xFF19173D),
       appBar: AppBar(
@@ -34,9 +113,9 @@ class Events extends StatelessWidget {
       ),
       body: FutureBuilder(
           future:
-              Provider.of<EventController>(context, listen: true).events_list(),
+              Provider.of<EventController>(context, listen: false).get_User_Events_List(id: user.id),
           initialData:
-              Provider.of<EventController>(context, listen: true).items,
+              Provider.of<EventController>(context, listen: false).items,
           builder: (context, snapshot) {
             List<Event> data =
                 Provider.of<EventController>(context, listen: false).items;
@@ -168,53 +247,6 @@ class Events extends StatelessWidget {
                       );
                     });
           }),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color.fromRGBO(32, 49, 92, 1),
-        onPressed: () =>
-            Provider.of<EventController>(context, listen: false).events_list(),
-        // Navigator.push(context,
-        //                 MaterialPageRoute(builder: (context) {
-        //                 return const CreatEvent();
-        //               })),
-        child: const Icon(Icons.add),
-      ),
-      bottomNavigationBar: Theme(
-          data: Theme.of(context).copyWith(
-              canvasColor:
-                  const Color.fromARGB(255, 70, 66, 131).withOpacity(0.5)),
-          child: BottomNavigationBar(
-              elevation: 1,
-              backgroundColor: const Color.fromARGB(255, 53, 43, 241),
-              fixedColor: const Color.fromARGB(255, 21, 190, 182),
-              selectedIconTheme: const IconThemeData(shadows: [
-                Shadow(
-                    color: Color.fromARGB(255, 21, 190, 182),
-                    offset: Offset(-2, 2),
-                    blurRadius: 15.0),
-                Shadow(
-                    color: Color.fromARGB(255, 21, 190, 182),
-                    offset: Offset(2, -2),
-                    blurRadius: 15.0)
-              ]),
-              selectedLabelStyle: const TextStyle(shadows: [
-                Shadow(
-                    color: Color.fromARGB(255, 21, 190, 182),
-                    offset: Offset(-2, 2),
-                    blurRadius: 15.0),
-                Shadow(
-                    color: Color.fromARGB(255, 21, 190, 182),
-                    offset: Offset(2, -2),
-                    blurRadius: 15.0)
-              ]),
-              items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.notifications), label: "Notif"),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.settings), label: "Settings"),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.person), label: "Profil"),
-              ])),
     );
   }
 }

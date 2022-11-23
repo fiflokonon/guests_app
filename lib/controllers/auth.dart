@@ -63,7 +63,7 @@ class AuthController with ChangeNotifier {
       
     } catch (error) {
       print("*** error $error");
-      rethrow;
+      return false;
     }
   }
 
@@ -79,8 +79,8 @@ class AuthController with ChangeNotifier {
       //   },
         // encoding: Encoding.getByName("utf-8"),
         body: {
-          "email": "said@gmail.com",
-          "mot_de_passe": "Jesus",
+          "email": email,
+          "mot_de_passe": password,
         },
       );
       final responseData = json.decode(response.body);
@@ -98,7 +98,7 @@ class AuthController with ChangeNotifier {
             mot_de_passe: responseData['user']['mot_de_passe'],
             created_at: responseData['user']['created_at']);
             print('token is ==== $token');
-            print("user model ====== ${user.email}");
+            print("user email ====== ${user.email}");
             notifyListeners();
             return true;
       }else{
@@ -133,8 +133,7 @@ class AuthController with ChangeNotifier {
     }
   }
 
-  Future<Map> change_User_Status(
-      {required String id,
+  Future<Map> change_User_Status({required String id,
       required String lastname,
       required String firstname,
       required String sexe,
