@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:guests/screens/Login.dart';
+import 'package:guests/screens/auth/Login.dart';
 import 'package:guests/widgets/ButtonWidget.dart';
 import 'package:guests/widgets/InputFormWidget.dart';
 import 'package:provider/provider.dart';
 
-import '../controllers/auth.dart';
+import '../../controllers/auth.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});

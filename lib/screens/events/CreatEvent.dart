@@ -6,7 +6,7 @@ import 'package:guests/widgets/ButtonWidget.dart';
 import 'package:guests/widgets/InputFormWidget.dart';
 import 'package:provider/provider.dart';
 
-import '../controllers/events.dart';
+import '../../controllers/events.dart';
 
 class CreatEvent extends StatefulWidget {
   const CreatEvent({super.key});
@@ -262,6 +262,7 @@ class _CreatEventState extends State<CreatEvent> {
                   var img = await imagePicked();
                   setState(() {
                     _photo = File(img.path);
+                    
                   });
                 }),
                 child: Container(

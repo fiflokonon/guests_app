@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:guests/controllers/events.dart';
-import 'package:guests/screens/CreatInvitation.dart';
-import 'package:guests/screens/Invitations.dart';
+import 'package:guests/screens/invitations/CreatInvitation.dart';
+import 'package:guests/screens/invitations/Invitations.dart';
 import 'package:guests/screens/statistique.dart';
 import 'package:guests/widgets/ButtonWidget.dart';
-import 'package:provider/provider.dart';
 
-import '../models.dart/events.dart';
+import '../../models.dart/events.dart';
 
 class EventDetails extends StatefulWidget {
-  final int eventId;
-  const EventDetails({super.key, required this.eventId});
+  final Event event;
+  const EventDetails({super.key, required this.event});
 
   @override
   State<EventDetails> createState() => _EventDetailsState();
@@ -19,10 +17,10 @@ class EventDetails extends StatefulWidget {
 class _EventDetailsState extends State<EventDetails> {
   @override
   Widget build(BuildContext context) {
-    Event event = Provider.of<EventController>(context, listen: true)
-        .items
-        .where((element) => element.id == widget.eventId)
-        .first;
+    // Event event = Provider.of<EventController>(context, listen: true)
+    //     .items
+    //     .where((element) => element.id == widget.eventId)
+    //     .first;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -59,7 +57,7 @@ class _EventDetailsState extends State<EventDetails> {
                             onPressed: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(builder: (context) {
-                                    return CreateInvitation(eventId: event.id,);
+                                    return CreateInvitation(eventId: widget.event.id,);
                                   }),
                                 ),
                             child: const Text(
@@ -83,7 +81,7 @@ class _EventDetailsState extends State<EventDetails> {
                         TextButton(
                             onPressed: () => Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                  return  Invitations(eventId: event.id,);
+                                  return  Invitations(eventId: widget.event.id,);
                                 })),
                             child: const Text("Les invitations",
                                 style: TextStyle(
@@ -123,7 +121,7 @@ class _EventDetailsState extends State<EventDetails> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  event.titre,
+                  widget.event.titre,
                   style: const TextStyle(
                       color: Colors.white,
                       fontFamily: "Oleo_Script",
@@ -161,7 +159,7 @@ class _EventDetailsState extends State<EventDetails> {
               Container(
                 alignment: Alignment.center,
                 child: Text(
-                  event.description,
+                  widget.event.description,
                   style:
                       const TextStyle(color: Colors.white, fontFamily: "Poppins"),
                 ),
@@ -174,14 +172,14 @@ class _EventDetailsState extends State<EventDetails> {
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
                   Text(
-                    "Debut: ${event.date_de_debut.substring(0, 10)}",
+                    "Debut: ${widget.event.date_de_debut.substring(0, 10)}",
                     style: const TextStyle(
                         color: Color.fromRGBO(123, 120, 170, 1),
                         fontWeight: FontWeight.w600,
                         fontFamily: "Poppins"),
                   ),
                   Text(
-                    "Heure: ${event.date_de_debut.substring(10, 16)}",
+                    "Heure: ${widget.event.date_de_debut.substring(10, 16)}",
                     style: const TextStyle(
                         color: Color.fromRGBO(123, 120, 170, 1),
                         fontFamily: "Poppins",
@@ -197,14 +195,14 @@ class _EventDetailsState extends State<EventDetails> {
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
                   Text(
-                    "Fin: ${event.date_de_debut.substring(0, 10)}",
+                    "Fin: ${widget.event.date_de_debut.substring(0, 10)}",
                     style: const TextStyle(
                         color: Color.fromRGBO(123, 120, 170, 1),
                         fontFamily: "Poppins",
                         fontWeight: FontWeight.w600),
                   ),
                   Text(
-                    "Heure: ${event.date_de_debut.substring(10, 16)}",
+                    "Heure: ${widget.event.date_de_debut.substring(10, 16)}",
                     style: const TextStyle(
                         color: Color.fromRGBO(123, 120, 170, 1),
                         fontFamily: "Poppins",

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:guests/screens/Login.dart';
+import 'package:guests/screens/splash.dart';
 import 'package:provider/provider.dart';
 
 import 'controllers/auth.dart';
@@ -23,9 +23,11 @@ class MyApp extends StatelessWidget {
           value: AuthController(),
         ),
         ChangeNotifierProxyProvider<AuthController, EventController>(
-            create: (ctx) => EventController('', []),
-            update: (ctx, auth, previousEvents) => EventController(auth.token,
-                previousEvents!.items.isNotEmpty ? previousEvents.items : [])),
+            create: (ctx) => EventController('', [],[],[],[]),
+            update: (ctx, auth, previousEvents) => previousEvents!.items.isNotEmpty ? 
+             EventController(auth.token,previousEvents.items,
+             previousEvents.currentItems,previousEvents.futureItems,previousEvents.pastItems):
+             EventController(auth.token,[],[],[],[])),
         ChangeNotifierProxyProvider<AuthController, InvitationController>(
             create: (ctx) => InvitationController('', []),
             update: (ctx, auth, previousInvitations) => InvitationController(auth.token,
@@ -37,8 +39,18 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
               scaffoldBackgroundColor: const Color(0xFF19173D),
-              fontFamily: "Poppins"),
-          home: const Login(),
+              fontFamily: "Poppins",
+              // primarySwatch: Colors.blue,
+    // textTheme:
+    //     const TextTheme(
+    //   headline1: TextStyle(color: Colors.white),
+    //   headline2: TextStyle(color: Colors.white),
+    //   bodyText2: TextStyle(color: Colors.white),
+    //   subtitle1: TextStyle(color: Colors.white30),
+    // ),
+    brightness: Brightness.dark
+    ),
+          home: const SplashScreen(),
         );
       }),
     );

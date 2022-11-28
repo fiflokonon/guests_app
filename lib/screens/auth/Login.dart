@@ -1,11 +1,11 @@
 
 import 'package:flutter/material.dart';
-import 'package:guests/screens/Events.dart';
-import 'package:guests/screens/Inscription.dart';
+import 'package:guests/screens/auth/Inscription.dart';
+import 'package:guests/screens/screen.dart';
 import 'package:provider/provider.dart';
-import '../controllers/auth.dart';
-import '../widgets/ButtonWidget.dart';
-import '../widgets/InputFormWidget.dart';
+import '../../controllers/auth.dart';
+import '../../widgets/ButtonWidget.dart';
+import '../../widgets/InputFormWidget.dart';
 
 class Login extends StatelessWidget {
   const Login({super.key});
@@ -90,7 +90,7 @@ class Login extends StatelessWidget {
                 value == true ? 
                 Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                        return const Events();
+                        return const Screen();
                       }))
                     : null
                     );

@@ -3,7 +3,7 @@ import 'package:guests/widgets/ButtonWidget.dart';
 import 'package:guests/widgets/InputFormWidget.dart';
 import 'package:provider/provider.dart';
 
-import '../controllers/invitation.dart';
+import '../../controllers/invitation.dart';
 
 class CreateInvitation extends StatefulWidget {
   final int eventId;
@@ -220,7 +220,7 @@ class _CreateInvitationState extends State<CreateInvitation> {
                   var invitation =
                       Provider.of<InvitationController>(context, listen: false)
                           .create_Invitation(
-                              idEvent: widget.eventId,
+                              idEvent: widget.eventId.toString(),
                               nom_prenoms: "$nomController $prenomController",
                               place: counter);
                   invitation.then((value) {
