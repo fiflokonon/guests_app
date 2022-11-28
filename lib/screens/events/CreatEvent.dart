@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:guests/utils.dart';
 import 'package:guests/widgets/ButtonWidget.dart';
 import 'package:guests/widgets/InputFormWidget.dart';
 import 'package:provider/provider.dart';
@@ -257,39 +256,39 @@ class _CreatEventState extends State<CreatEvent> {
               const SizedBox(
                 height: 20,
               ),
-              InkWell(
-                onTap: (() async {
-                  var img = await imagePicked();
-                  setState(() {
-                    _photo = File(img.path);
+              // InkWell(
+              //   onTap: (() async {
+              //     var img = await imagePicked();
+              //     setState(() {
+              //       _photo = File(img.path);
                     
-                  });
-                }),
-                child: Container(
-                    height: 50,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(color: Colors.white, width: 2.0),
-                    ),
-                    child: Center(
-                      child: _photo == null
-                          ? const Text(
-                              "Logo de l'événement(Optionnel)",
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 192, 182, 182),
-                                  fontFamily: "Poppins",
-                                  fontSize: 15),
-                            )
-                          : Text(
-                              "link: ${_photo!.path}",
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: "Poppins",
-                                  fontSize: 15),
-                            ),
-                    )),
-              ),
+              //     });
+              //   }),
+              //   child: Container(
+              //       height: 50,
+              //       width: double.infinity,
+              //       decoration: BoxDecoration(
+              //         borderRadius: BorderRadius.circular(15),
+              //         border: Border.all(color: Colors.white, width: 2.0),
+              //       ),
+              //       child: Center(
+              //         child: _photo == null
+              //             ? const Text(
+              //                 "Logo de l'événement(Optionnel)",
+              //                 style: TextStyle(
+              //                     color: Color.fromARGB(255, 192, 182, 182),
+              //                     fontFamily: "Poppins",
+              //                     fontSize: 15),
+              //               )
+              //             : Text(
+              //                 "link: ${_photo!.path}",
+              //                 style: const TextStyle(
+              //                     color: Colors.white,
+              //                     fontFamily: "Poppins",
+              //                     fontSize: 15),
+              //               ),
+              //       )),
+              // ),
               const SizedBox(
                 height: 20,
               ),
@@ -316,7 +315,7 @@ class _CreatEventState extends State<CreatEvent> {
                           date_de_fin: "$endDay $endTime");
                   event.then((value) {
                     if(value==true){
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Evenement creer")));
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Evenement créée", textAlign: TextAlign.center,)));
                       return Navigator.pop(context);
                     }
                   } );

@@ -221,12 +221,12 @@ class _CreateInvitationState extends State<CreateInvitation> {
                       Provider.of<InvitationController>(context, listen: false)
                           .create_Invitation(
                               idEvent: widget.eventId.toString(),
-                              nom_prenoms: "$nomController $prenomController",
-                              place: counter);
+                              nom_prenoms: "${nomController.text} ${prenomController.text}",
+                              place: counter.toString());
                   invitation.then((value) {
                     if (value == true) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Evenement creer")));
+                          const SnackBar(content: Text("Invitation créée", textAlign: TextAlign.center,)));
                       return Navigator.pop(context);
                     }
                   });

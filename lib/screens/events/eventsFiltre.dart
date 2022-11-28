@@ -39,49 +39,110 @@ class EventsFiltre extends StatelessWidget {
       ),
       body:  
       TabBarView(children: [
-        EventListScreen(user: user, 
-        future:Provider.of<EventController>(context, listen: false).user_Past_Events(id: "${user.id}"),
-        initialValue: Provider.of<EventController>(context, listen: false).pastItems),
-        EventListScreen(user: user,
-        future:Provider.of<EventController>(context, listen: false).user_Today_Events(id: "${user.id}"),
-        initialValue: Provider.of<EventController>(context, listen: false).currentItems),
-        EventListScreen(user: user,
-        future:Provider.of<EventController>(context, listen: false).user_Coming_Events(id: "${user.id}"),
-        initialValue: Provider.of<EventController>(context, listen: false).futureItems),
+        EventListScreen1(user: user),
+        EventListScreen2(user: user),
+        EventListScreen3(user: user),
 
       ]) )
     );
   }
 }
 
-class EventListScreen extends StatelessWidget {
-  const EventListScreen({
+class EventListScreen1 extends StatelessWidget {
+  const EventListScreen1({
     Key? key,
-    required this.user, required this.future,required this.initialValue
+    required this.user,
   }) : super(key: key);
 
   final User user;
-  final Future<List<Event>> future ;
-  final List<Event> initialValue;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future:
-          future,
+          Provider.of<EventController>(context, listen: false).user_Past_Events(id: "${user.id}"),
       initialData:
-          initialValue,
+           Provider.of<EventController>(context, listen: false).pastItems,
       builder: (context, snapshot) {
+        
+        final data = Provider.of<EventController>(context, listen: true).pastItems;
         return snapshot.connectionState == ConnectionState.waiting
             ? const Center(
                 child: CircularProgressIndicator(),
               )
-            :snapshot.data!.isEmpty ? const Center(child: Text("Pas de donnée"),) : ListView.builder(
-                itemCount: snapshot.data!.length,
+            :snapshot.data!.isEmpty ? const Center(child: Text("Pas de donnée"),) :
+             ListView.builder(
+                itemCount: data.length,
                 itemBuilder: (context, index) {
                   Provider.of<EventController>(context, listen: false).get_User_Events_List(id: user.id);
-                  return EventSelect(key:ValueKey(snapshot.data![index].id),
-                    data: snapshot.data![index]);
+                  return EventSelect(key:ValueKey(data[index].id),
+                    data: data[index]);
+                });
+      });
+  }
+}
+
+class EventListScreen2 extends StatelessWidget {
+  const EventListScreen2({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
+
+  final User user;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future:
+          Provider.of<EventController>(context, listen: false).user_Today_Events(id: "${user.id}"),
+      initialData: Provider.of<EventController>(context, listen: false).currentItems,
+      builder: (context, snapshot) {
+        
+        final data = Provider.of<EventController>(context, listen: true).currentItems;
+        return snapshot.connectionState == ConnectionState.waiting
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            :snapshot.data!.isEmpty ? const Center(child: Text("Pas de donnée"),) :
+             ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  Provider.of<EventController>(context, listen: false).get_User_Events_List(id: user.id);
+                  return EventSelect(key:ValueKey(data[index].id),
+                    data: data[index]);
+                });
+      });
+  }
+}
+
+class EventListScreen3 extends StatelessWidget {
+  const EventListScreen3({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
+
+  final User user;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future:
+          Provider.of<EventController>(context, listen: false).user_Coming_Events(id: "${user.id}"),
+      initialData:
+          Provider.of<EventController>(context, listen: false).futureItems,
+      builder: (context, snapshot) {
+        final data = Provider.of<EventController>(context, listen: true).futureItems;
+        return snapshot.connectionState == ConnectionState.waiting
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            :snapshot.data!.isEmpty ? const Center(child: Text("Pas de donnée"),) :
+             ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  Provider.of<EventController>(context, listen: false).get_User_Events_List(id: user.id);
+                  return EventSelect(key:ValueKey(data[index].id),
+                    data: data[index]);
                 });
       });
   }

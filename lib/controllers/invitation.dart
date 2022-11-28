@@ -49,7 +49,7 @@ String authToken;
     }
       }
 
-Future <bool> create_Invitation({required String idEvent,required String nom_prenoms,required int place}) async{
+Future <bool> create_Invitation({required String idEvent,required String nom_prenoms,required String place}) async{
         try {
       final response = await http.post(
         Uri.parse('$url/events/$idEvent/invitations'),
@@ -59,7 +59,7 @@ Future <bool> create_Invitation({required String idEvent,required String nom_pre
         // encoding: Encoding.getByName("utf-8"),
         body: {
           "nom_prenoms": nom_prenoms,
-          "place": "$place",
+          "place": place,
         },
       );
       final invitation = json.decode(response.body);
