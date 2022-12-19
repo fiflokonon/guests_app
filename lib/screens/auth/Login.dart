@@ -1,21 +1,35 @@
-
 import 'package:flutter/material.dart';
 import 'package:guests/screens/auth/Inscription.dart';
 import 'package:guests/screens/screen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../controllers/auth.dart';
 import '../../widgets/ButtonWidget.dart';
 import '../../widgets/InputFormWidget.dart';
+import '../../widgets/loadingWidget.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   const Login({super.key});
 
   @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  bool _secureText = true;
+
+  showHide() {
+    setState(() {
+      _secureText = !_secureText;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // ignore: prefer_const_constructors
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-    GlobalKey formKey = GlobalKey<FormState>();
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(16.0),
@@ -41,21 +55,44 @@ class Login extends StatelessWidget {
               height: 40,
             ),
             Form(
-                key: formKey,
+                key: _formKey,
                 child: Column(
                   children: [
-                    InputFormWidget(
+                    InputFormWidget(keyboardType: TextInputType.emailAddress,
                       nameController: emailController,
                       label: 'Entrez votre email',
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Vous devez fourni ce champ";
+                        } else if (!value.contains('@')) {
+                          return "Email invalide";
+                        }
+                        return null;
+                      },
                       obscure: false,
                     ),
                     const SizedBox(
                       height: 20,
                     ),
-                    InputFormWidget(
+                    InputFormWidget(keyboardType: TextInputType.visiblePassword,
                       nameController: passwordController,
-                      label: 'Entrez votre mot de passord',
-                      obscure: true,
+                      label: 'Entrez votre mot de passe',
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Vous devez fourni ce champ";
+                        }
+                        return null;
+                      },
+                      obscure: _secureText,
+                      suffix: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _secureText = !_secureText;
+                            });
+                          },
+                          child: _secureText
+                              ? const Icon(Icons.visibility)
+                              : const Icon(Icons.visibility_off)),
                     ),
                   ],
                 )),
@@ -80,21 +117,30 @@ class Login extends StatelessWidget {
             ),
             ButtonWidget(
               text: "Connexion",
-              tap: () {
-                var login = Provider.of<AuthController>(context, listen: false)
-                // .get_all_users();
-                .login(
-                    email: emailController.text,
-                    password: passwordController.text);
-                login.then((value) => 
-                value == true ? 
-                Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                        return const Screen();
-                      }))
-                    : null
-                    );
-                    // Provider.of<EventController>(context, listen: false).events_list();
+              tap: () async {
+                if (_formKey.currentState!.validate()) {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const Loading();
+                      });
+                  var login =
+                      Provider.of<AuthController>(context, listen: false)
+                          // .get_all_users();
+                          .login(
+                              email: emailController.text,
+                              password: passwordController.text);
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setString('mail', emailController.text);
+                  await prefs.setString('pass', passwordController.text);
+                  login.then((value) => value == true
+                      ? Navigator.pushAndRemoveUntil(context,
+                          MaterialPageRoute(builder: (context) {
+                          return const Screen();
+                        }), (route) => false)
+                      : null);
+                  // Provider.of<EventController>(context, listen: false).events_list();}
+                }
               },
             ),
             const SizedBox(
@@ -106,17 +152,18 @@ class Login extends StatelessWidget {
                 children: [
                   const Text(
                     'Vous n\'avez pas de compte ?',
-                    style: TextStyle(color: Colors.white, fontFamily: "Poppins"),
+                    style:
+                        TextStyle(color: Colors.white, fontFamily: "Poppins"),
                   ),
                   TextButton(
                     child: const Text(
                       'Inscrivez-vous',
-                      style: TextStyle( fontFamily: "Poppins"),
+                      style: TextStyle(fontFamily: "Poppins"),
                     ),
                     onPressed: () {
                       //signup screen
                       Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
+                          MaterialPageRoute(builder: (context) {
                         return const Signup();
                       }));
                     },
@@ -131,4 +178,3 @@ class Login extends StatelessWidget {
     );
   }
 }
-

@@ -224,10 +224,13 @@ class _CreateInvitationState extends State<CreateInvitation> {
                               nom_prenoms: "${nomController.text} ${prenomController.text}",
                               place: counter.toString());
                   invitation.then((value) {
-                    if (value == true) {
+                    if (value['success']) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Invitation créée", textAlign: TextAlign.center,)));
+                           SnackBar(content: Text(value['message'], textAlign: TextAlign.center,)));
                       return Navigator.pop(context);
+                    }else{
+                      ScaffoldMessenger.of(context).showSnackBar(
+                           SnackBar(content: Text(value['message'], textAlign: TextAlign.center,)));
                     }
                   });
                 },

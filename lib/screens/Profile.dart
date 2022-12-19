@@ -1,10 +1,11 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:guests/screens/auth/Login.dart';
+import 'package:provider/provider.dart';
 
+import '../controllers/auth.dart';
+import '../models.dart/user.dart';
 import '../widgets/ListileWidget.dart';
 
 class Profile extends StatefulWidget {
@@ -20,6 +21,7 @@ class _ProfileState extends State<Profile> {
   ];
   @override
   Widget build(BuildContext context) {
+    User user = Provider.of<AuthController>(context, listen: false).user;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -45,24 +47,30 @@ class _ProfileState extends State<Profile> {
             child: Column(
               children: [
                 Container(
-                    height: 130,
-                    width: 130,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(150),
-                        image: const DecorationImage(
-                            image: AssetImage("assets/images/logo.png")))),
+                  height: 130,
+                  width: 130,
+                  decoration: BoxDecoration(
+                      color: const Color(0xFF19173D),
+                      border: Border.all(color:  Colors.white),
+                      borderRadius: BorderRadius.circular(100),),
+                  child: CircleAvatar(backgroundColor: const Color(0xFF19173D),
+                    child: SvgPicture.network(
+                        "https://visualpharm.com/assets/387/Person-595b40b75ba036ed117da139.svg",
+                        height: 100,width: 100,
+                        ),
+                  ),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
-                const Text(
-                  "Arnaud LOKONON",
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 194, 194, 206),
-                      fontFamily: "Poppins",
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                      ),
+                Text(
+                  "${user.prenoms} ${user.nom}",
+                  style: const TextStyle(
+                    color: Color.fromARGB(255, 194, 194, 206),
+                    fontFamily: "Poppins",
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
                 const SizedBox(
                   height: 20,
@@ -78,34 +86,40 @@ class _ProfileState extends State<Profile> {
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30))),
               child: Column(
-                children: const [
-                  SizedBox(
+                children:  [
+                  const SizedBox(
                     height: 30,
                   ),
-                  ListileWigdet(
+                  const ListileWigdet(
                     text: 'Notifications',
                     iconData: Icons.notifications,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
-                  ListileWigdet(text: 'Profil',
-                  iconData: Icons.person,),
-                  SizedBox(
+                  // ListileWigdet(text: 'Profil',
+                  // iconData: Icons.person,),
+                  // SizedBox(
+                  //   height: 5,
+                  // ),
+                  const ListileWigdet(
+                      text: "A propos", iconData: Icons.info_outline_rounded),
+                  const SizedBox(
                     height: 5,
                   ),
-                  ListileWigdet(text: "A propos", 
-                  iconData: Icons.info_outline_rounded),
-                  SizedBox(
+                  const ListileWigdet(text: "Aide", iconData: Icons.help_center),
+                  const SizedBox(
                     height: 5,
                   ),
-                  ListileWigdet(text: "Aide", 
-                  iconData: Icons.help_center),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  ListileWigdet(text: "Déconnexion",
-                   iconData: Icons.logout)
+                  GestureDetector(
+                    onTap: () =>                       
+                      Navigator.pushAndRemoveUntil(
+                        context, MaterialPageRoute(builder: (context) {
+              return const Login();
+            }),
+                          (route) => false)
+                    ,
+                    child: const ListileWigdet(text: "Déconnexion", iconData: Icons.logout))
                 ],
               ),
             ),
@@ -115,4 +129,3 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
-

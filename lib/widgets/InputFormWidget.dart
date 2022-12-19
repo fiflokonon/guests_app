@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class InputFormWidget extends StatelessWidget {
-  const InputFormWidget({
-    Key? key,
-    required this.nameController,
-    required this.label,
-    required this.obscure,
-    this.maxLines
-  }) : super(key: key);
+  const InputFormWidget(
+      {Key? key,
+      required this.nameController,
+      required this.label,
+      required this.obscure,
+      this.maxLines,
+      this.suffix,
+      this.validator,
+      this.keyboardType})
+      : super(key: key);
 
   final TextEditingController nameController;
   final String label;
   final bool obscure;
   final int? maxLines;
+  final Widget? suffix;
+  final String? Function(String?)? validator;
+  final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +26,15 @@ class InputFormWidget extends StatelessWidget {
       maxLines: maxLines ?? 1,
       style: const TextStyle(color: Colors.white),
       controller: nameController,
+      textCapitalization: TextCapitalization.sentences,
+      keyboardType: keyboardType ?? TextInputType.text,
       obscureText: obscure,
-      // ignore: prefer_const_constructors
+      validator: validator,
       decoration: InputDecoration(
+          suffixIcon: suffix,
           labelText: label,
-          // ignore: prefer_const_constructors
-          labelStyle: TextStyle(
-              fontFamily: 'Poppins',
-              color: const Color.fromARGB(255, 192, 182, 182)),
+          labelStyle: const TextStyle(
+              fontFamily: 'Poppins', color: Color.fromARGB(255, 192, 182, 182)),
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
               // ignore: prefer_const_constructors

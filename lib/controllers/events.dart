@@ -232,7 +232,7 @@ Future <List<Event>> past_events(String id) async{
         },
       );
       final responseData = json.decode(response.body);
-      print("===== user event list");
+      print("===== past list");
       List<Event> events = [];
       for (var event in responseData) {
         // create event
@@ -267,7 +267,7 @@ Future <List<Event>> past_events(String id) async{
         },
       );
       final responseData = json.decode(response.body);
-      print("===== user event list");
+      print("===== comming event list");
       List<Event> events = [];
       for (var event in responseData) {
         // create event
@@ -302,7 +302,7 @@ Future <List<Event>> past_events(String id) async{
         },
       );
       final responseData = json.decode(response.body);
-      print("===== user event list");
+      print("===== user past list");
       List<Event> events = [];
       for (var event in responseData) {
         // create event
@@ -320,6 +320,7 @@ Future <List<Event>> past_events(String id) async{
         // _items.add(data);
       }
       _pastItems = events;
+      print(_pastItems.length);
       notifyListeners();
       return _pastItems;
     } catch (error) {
@@ -337,7 +338,7 @@ Future <List<Event>> user_Coming_Events({required String id}) async{
         },
       );
       final responseData = json.decode(response.body);
-      print("===== user event list");
+      print("===== user comming event list");
       List<Event> events = [];
       for (var event in responseData) {
         // create event
@@ -355,6 +356,7 @@ Future <List<Event>> user_Coming_Events({required String id}) async{
         // _items.add(data);
       }
       _futureItems = events;
+      print(_futureItems.length);
       notifyListeners();
       return _futureItems;
     } catch (error) {
@@ -373,7 +375,7 @@ Future <List<Event>> user_Coming_Events({required String id}) async{
         },
       );
       final responseData = json.decode(response.body);
-      print("===== user event list");
+      print("===== user today event list");
       List<Event> events = [];
       for (var event in responseData) {
         // create event
@@ -391,6 +393,7 @@ Future <List<Event>> user_Coming_Events({required String id}) async{
         // _items.add(data);
       }
       _currentItems = events;
+      print(_currentItems.length);
       notifyListeners();
       return _currentItems;
     } catch (error) {

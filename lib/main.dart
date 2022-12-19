@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:guests/controllers/presences.dart';
 import 'package:guests/screens/splash.dart';
 import 'package:provider/provider.dart';
 
 import 'controllers/auth.dart';
 import 'controllers/events.dart';
 import 'controllers/invitation.dart';
+import 'screens/auth/Login.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,35 +25,50 @@ class MyApp extends StatelessWidget {
           value: AuthController(),
         ),
         ChangeNotifierProxyProvider<AuthController, EventController>(
-            create: (ctx) => EventController('', [],[],[],[]),
-            update: (ctx, auth, previousEvents) => previousEvents!.items.isNotEmpty ? 
-             EventController(auth.token,previousEvents.items,
-             previousEvents.currentItems,previousEvents.futureItems,previousEvents.pastItems):
-             EventController(auth.token,[],[],[],[])),
+            create: (ctx) => EventController('', [], [], [], []),
+            update: (ctx, auth, previousEvents) =>
+                previousEvents!.items.isNotEmpty
+                    ? EventController(
+                        auth.token,
+                        previousEvents.items,
+                        previousEvents.currentItems,
+                        previousEvents.futureItems,
+                        previousEvents.pastItems)
+                    : EventController(auth.token, [], [], [], [])),
         ChangeNotifierProxyProvider<AuthController, InvitationController>(
             create: (ctx) => InvitationController('', []),
-            update: (ctx, auth, previousInvitations) => InvitationController(auth.token,
-                previousInvitations!.items.isNotEmpty ? previousInvitations.items : [])),
+            update: (ctx, auth, previousInvitations) => InvitationController(
+                auth.token,
+                previousInvitations!.items.isNotEmpty
+                    ? previousInvitations.items
+                    : [])),
+        ChangeNotifierProxyProvider<AuthController, PresenceController>(
+            create: (ctx) => PresenceController('', []),
+            update: (ctx, auth, previousPresence) => PresenceController(
+                auth.token,
+                previousPresence!.items.isNotEmpty
+                    ? previousPresence.items
+                    : [])),
       ],
       child: Consumer<AuthController>(builder: (ctx, auth, _) {
         return MaterialApp(
-          title: 'Guests',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-              scaffoldBackgroundColor: const Color(0xFF19173D),
-              fontFamily: "Poppins",
-              // primarySwatch: Colors.blue,
-    // textTheme:
-    //     const TextTheme(
-    //   headline1: TextStyle(color: Colors.white),
-    //   headline2: TextStyle(color: Colors.white),
-    //   bodyText2: TextStyle(color: Colors.white),
-    //   subtitle1: TextStyle(color: Colors.white30),
-    // ),
-    brightness: Brightness.dark
-    ),
-          home: const SplashScreen(),
-        );
+            title: 'Guests',
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+                scaffoldBackgroundColor: const Color(0xFF19173D),
+                fontFamily: "Poppins",
+                brightness: Brightness.dark),
+            home: const SplashScreen()
+            // AnimatedSplashScreen(
+            //   splashIconSize: 250,
+            //   splash: 'assets/images/logo.png',
+            //   nextScreen: const Login(),
+            //   backgroundColor: const Color.fromRGBO(32, 49, 92, 1),
+            //   splashTransition: SplashTransition.sizeTransition,
+            //   curve: Curves.bounceOut,
+            //   // pageTransitionType: PageTransitionType.scale,
+            // )
+            );
       }),
     );
   }

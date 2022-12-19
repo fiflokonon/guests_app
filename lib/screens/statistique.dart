@@ -1,116 +1,146 @@
 import 'package:flutter/material.dart';
+import 'package:guests/screens/tablo.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
+import '../controllers/presences.dart';
 import '../widgets/ButtonWidget.dart';
 
 class Statistique extends StatelessWidget {
-  const Statistique({super.key});
+  String eventId;
+  Statistique({super.key, required this.eventId});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xff25234f),
-      // appBar: AppBar(
-      //   centerTitle: true,
-      //   title: const Text(
-      //     "Mes événements",
-      //     style: TextStyle(
-      //         color: Colors.white,
-      //         fontFamily: "Poppins",
-      //         fontWeight: FontWeight.w700),
-      //   ),
-      //   leading: IconButton(
-      //       onPressed: () {
-      //         //Back
-      //       },
-      //       icon: const Icon(
-      //         Icons.arrow_back_ios_new_sharp,
-      //         color: Colors.white,
-      //       )),
-      //   elevation: 0.0,
-      //   backgroundColor: Colors.transparent,
-      // ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Chart(),
-          Expanded(
-              child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const SizedBox(height: 150),
-                const Text("Les statistiques liées à l'evènement",style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 18,
-                                // fontWeight: FontWeight.w400,
-                                color: Colors.white)),
-                RichText(
-                  text: const TextSpan(
-                      text: "Nombre d'invité: ",
-                      style: TextStyle(
-                                fontFamily: "Poppins",
-                                // fontWeight: FontWeight.w400,
-                                color: Colors.white),
-                      children: [
-                        TextSpan(
-                            text: "600   personnes",style: TextStyle(
-                                fontFamily: "Poppins",
-                                // fontSize: 20,
-                                // fontWeight: FontWeight.w400,
-                                color: Color(0xff8426db)))
-                      ]),
-                ),RichText(
-                  text: const TextSpan(
-                      text: "Nombre présent: ",
-                      style: TextStyle(
-                                fontFamily: "Poppins",
-                                // fontWeight: FontWeight.w400,
-                                color: Colors.white),
-                      children: [
-                        TextSpan(
-                            text: "400   personnes",style: TextStyle(
-                                fontFamily: "Poppins",
-                                // fontSize: 20,
-                                // fontWeight: FontWeight.w400,
-                                color: Color(0xff4fd282)))
-                      ]),
-                ),RichText(
-                  text: const TextSpan(
-                      text: "Nombre d'absent : ",
-                      style: TextStyle(
-                                fontFamily: "Poppins",
-                                // fontWeight: FontWeight.w400,
-                                color: Colors.white),
-                      children: [
-                        TextSpan(
-                            text: "200   personnes",style: TextStyle(
-                                fontFamily: "Poppins",
-                                // fontSize: 20,
-                                // fontWeight: FontWeight.w400,
-                                color: Color(0xffc63e44)))
-                      ]),
-                ),
-                ButtonWidget(
-                  text: "Quitter",
-                  tap: () {},
-                )
-              ],
-            ),
-          )),],
-      ),
+      body: FutureBuilder(
+          future: Provider.of<PresenceController>(context, listen: false)
+              .get_event_stats(event: eventId),
+          builder: (context, snapshot) {
+            return snapshot.connectionState == ConnectionState.waiting
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : snapshot.hasData && snapshot.data!['success']
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Chart(
+                              title: snapshot.data!['data']['eventTitle'],
+                              presents:
+                                  "${snapshot.data!['data']['nbPresents']}",
+                              invitees:
+                                  "${snapshot.data!['data']['nbInvites']}",
+                              stats: snapshot.data!['data']['nbPresents'] *
+                                  100 /
+                                  snapshot.data!['data']['nbInvites']),
+                          Expanded(
+                              child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                const SizedBox(height: 150),
+                                const Text(
+                                    "Les statistiques liées à l'evènement",
+                                    style: TextStyle(
+                                        fontFamily: "Poppins",
+                                        fontSize: 18,
+                                        // fontWeight: FontWeight.w400,
+                                        color: Colors.white)),
+                                RichText(
+                                  text: TextSpan(
+                                      text: "Nombre d'invité: ",
+                                      style: const TextStyle(
+                                          fontFamily: "Poppins",
+                                          // fontWeight: FontWeight.w400,
+                                          color: Colors.white),
+                                      children: [
+                                        TextSpan(
+                                            text:
+                                                "${snapshot.data!['data']['nbInvites']}   personnes",
+                                            style: const TextStyle(
+                                                fontFamily: "Poppins",
+                                                // fontSize: 20,
+                                                // fontWeight: FontWeight.w400,
+                                                color: Color(0xff8426db)))
+                                      ]),
+                                ),
+                                RichText(
+                                  text: TextSpan(
+                                      text: "Nombre présent: ",
+                                      style: const TextStyle(
+                                          fontFamily: "Poppins",
+                                          // fontWeight: FontWeight.w400,
+                                          color: Colors.white),
+                                      children: [
+                                        TextSpan(
+                                            text:
+                                                "${snapshot.data!['data']['nbPresents']}      personnes",
+                                            style: const TextStyle(
+                                                fontFamily: "Poppins",
+                                                // fontSize: 20,
+                                                // fontWeight: FontWeight.w400,
+                                                color: Color(0xff4fd282)))
+                                      ]),
+                                ),
+                                RichText(
+                                  text: TextSpan(
+                                      text: "Nombre d'absent : ",
+                                      style: const TextStyle(
+                                          fontFamily: "Poppins",
+                                          // fontWeight: FontWeight.w400,
+                                          color: Colors.white),
+                                      children: [
+                                        TextSpan(
+                                            text:
+                                                "${snapshot.data!['data']['nbAbsent']}      personnes",
+                                            style: const TextStyle(
+                                                fontFamily: "Poppins",
+                                                // fontSize: 20,
+                                                // fontWeight: FontWeight.w400,
+                                                color: Color(0xffc63e44)))
+                                      ]),
+                                ),
+                                // ButtonWidget(
+                                //   text: "Details",
+                                //   tap: () {
+                                //     Navigator.push(context,
+                                //         MaterialPageRoute(builder: (context) {
+                                //       return TabloScreen(
+                                //         eventId: eventId,
+                                //       );
+                                //     }));
+                                //   },
+                                // )
+                              ],
+                            ),
+                          )),
+                        ],
+                      )
+                    : Center(
+                        child: Text(
+                          snapshot.data!['message'],
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+          }),
     );
   }
 }
 
-
-
 class Chart extends StatelessWidget {
-  const Chart({
-    Key? key,
-  }) : super(key: key);
+  double stats;
+  String presents, invitees, title;
+  Chart(
+      {Key? key,
+      required this.stats,
+      required this.invitees,
+      required this.presents,
+      required this.title})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -125,10 +155,10 @@ class Chart extends StatelessWidget {
         Positioned(
             // top: 10,
             child: Padding(
-              padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 45.0),
-              child: Row(
-          children: [
-               CircleAvatar(
+          padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 45.0),
+          child: Row(
+            children: [
+              CircleAvatar(
                 radius: 25,
                 child: Image.asset("assets/images/image_3.png"),
               ),
@@ -138,22 +168,24 @@ class Chart extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text("FestiChill",style: TextStyle(
-                                fontFamily: "Oleo_Script",
-                                fontSize: 20,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white)),
-                  Text("Chill family de retour",style: TextStyle(
-                                fontFamily: "Poppins",
-                                // fontSize: 20,
-                                // fontWeight: FontWeight.w400,
-                                color: Color.fromARGB(220, 255, 255, 255))),
+                children: [
+                  Text(title,
+                      style: const TextStyle(
+                          fontFamily: "Oleo_Script",
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white)),
+                  // Text("Chill family de retour",
+                  //     style: TextStyle(
+                  //         fontFamily: "Poppins",
+                  //         // fontSize: 20,
+                  //         // fontWeight: FontWeight.w400,
+                  //         color: Color.fromARGB(220, 255, 255, 255))),
                 ],
               )
-          ],
-        ),
-            )),
+            ],
+          ),
+        )),
         Positioned(
           bottom: -140,
           left: 0,
@@ -181,23 +213,23 @@ class Chart extends StatelessWidget {
                               axisLineStyle: const AxisLineStyle(
                                   thickness: 35,
                                   color: Color.fromARGB(255, 3, 57, 102)),
-                              pointers: const <GaugePointer>[
+                              pointers: <GaugePointer>[
                                 RangePointer(
-                                    value: 60,
+                                    value: stats,
                                     width: 35,
-                                    color: Color(0xff8426db),
+                                    color: const Color(0xff8426db),
                                     enableAnimation: true,
                                     cornerStyle: CornerStyle.bothCurve),
                                 RangePointer(
-                                    value: 40,
+                                    value: stats * 0.66,
                                     width: 35,
-                                    color: Color(0xff4fd282),
+                                    color: const Color(0xff4fd282),
                                     enableAnimation: true,
                                     cornerStyle: CornerStyle.bothCurve),
                                 RangePointer(
-                                    value: 20,
+                                    value: stats * 0.33,
                                     width: 35,
-                                    color: Color(0xffc63e44),
+                                    color: const Color(0xffc63e44),
                                     enableAnimation: true,
                                     cornerStyle: CornerStyle.bothCurve),
                               ],
@@ -209,19 +241,23 @@ class Chart extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
-                                    children: const [
-                                      Text("600 invités",
-                                                      style: TextStyle(
-                                                                fontFamily: "Poppins",
-                                                                fontSize: 18,
-                                                                fontWeight: FontWeight.w800,
-                                                                color: Colors.white),),
-                                      Text("dont 400 présents",
-                                                      style: TextStyle(
-                                                                fontFamily: "Poppins",
-                                                                fontSize: 18,
-                                                                fontWeight: FontWeight.w400,
-                                                                color: Colors.white),)
+                                    children: [
+                                      Text(
+                                        "$invitees invitées",
+                                        style: const TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.white),
+                                      ),
+                                      Text(
+                                        "dont $presents présents",
+                                        style: const TextStyle(
+                                            fontFamily: "Poppins",
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.white),
+                                      )
                                     ],
                                   ),
                                 )

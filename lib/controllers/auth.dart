@@ -18,11 +18,11 @@ class AuthController with ChangeNotifier {
     return _token;
   }
 
-  Future<bool> register(
+  Future<Map> register(
       {required String lastname,
       required String firstname,
       required String sexe,
-      required int contact,
+      required String contact,
       required String email,
       required String password}) async {
     try {
@@ -33,37 +33,46 @@ class AuthController with ChangeNotifier {
         //   'Accept': 'application/json',
         // },
         // encoding: Encoding.getByName("utf-8"),
-        body: json.encode({
+        body: {
           "email": email,
           "tel": contact,
           "sexe": sexe,
           "nom": lastname,
           "prenoms": firstname,
           "mot_de_passe": password,
-        }),
+        },
       );
       final responseData = json.decode(response.body);
       print("===== $responseData");
-      try {
+      if(responseData['success']){
         _user = User(
-            id: responseData[0]['id'],
-            statut: responseData[0]['statut'],
-            prenoms: responseData[0]['prenoms'],
-            nom: responseData[0]['nom'],
-            sexe: responseData[0]['sexe'],
-            email: responseData[0]['email'],
-            tel: responseData[0]['tel'],
-            mot_de_passe: responseData[0]['mot_de_passe'],
-            created_at: responseData[0]['created_at']);
+            id: responseData['response'][0]['id'],
+            statut: responseData['response'][0]['statut'],
+            prenoms: responseData['response'][0]['prenoms'],
+            nom: responseData['response'][0]['nom'],
+            sexe: responseData['response'][0]['sexe'],
+            email: responseData['response'][0]['email'],
+            tel: responseData['response'][0]['tel'],
+            mot_de_passe: responseData['response'][0]['mot_de_passe'],
+            created_at: responseData['response'][0]['created_at']);
             notifyListeners();
-        return true;      
-      } catch (e) {
-        return false;
+        return {
+          "success": true,
+          "message": "Compte créé"
+        };
+      }else{
+        return {
+          "success": false,
+          "message": responseData['message']
+        };
       }
       
     } catch (error) {
       print("*** error $error");
-      return false;
+      return {
+          "success": false,
+          "message": "Probleme de creation"
+        };
     }
   }
 

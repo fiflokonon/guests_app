@@ -217,7 +217,7 @@ class _EventDetailsState extends State<EventDetails> {
                 text: "Voir les statistiques",
                 tap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const Statistique();
+                    return  Statistique(eventId: widget.event.id.toString(),);
                   }));
                 },
               )

@@ -15,14 +15,24 @@ class Signup extends StatefulWidget {
 
 class _SignupState extends State<Signup> {
   String groupValue = 'M';
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController telController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController passConfirmController = TextEditingController();
+  final _formkey = GlobalKey<FormState>();
+
+  bool _secureText = true;
+
+  showHide() {
+    setState(() {
+      _secureText = !_secureText;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController lastNameController = TextEditingController();
-    TextEditingController firstNameController = TextEditingController();
-    TextEditingController emailController = TextEditingController();
-    TextEditingController telController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(20.0),
@@ -48,38 +58,115 @@ class _SignupState extends State<Signup> {
               const SizedBox(
                 height: 40,
               ),
-              InputFormWidget(
-                  nameController: lastNameController,
-                  label: 'Entrez votre nom',
-                  obscure: false),
+              Form(
+                  key: _formkey,
+                  child: Column(children: [
+                    InputFormWidget(
+                        keyboardType: TextInputType.name,
+                        nameController: lastNameController,
+                        label: 'Entrez votre nom',
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Vous devez fourni ce champ";
+                          }
+                          return null;
+                        },
+                        obscure: false),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    InputFormWidget(
+                        keyboardType: TextInputType.name,
+                        nameController: firstNameController,
+                        label: "Entrez votre/vos prénoms",
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Vous devez fourni ce champ";
+                          }
+                          return null;
+                        },
+                        obscure: false),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    InputFormWidget(
+                        keyboardType: TextInputType.emailAddress,
+                        nameController: emailController,
+                        label: "Entrez votre email",
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Vous devez fourni ce champ";
+                          } else if (!value.contains("@")) {
+                            return "Email invalide";
+                          }
+                          return null;
+                        },
+                        obscure: false),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    InputFormWidget(
+                        keyboardType: TextInputType.phone,
+                        nameController: telController,
+                        label: "Entrez votre contact",
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Vous devez fourni ce champ";
+                          }
+                          return null;
+                        },
+                        obscure: false),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    InputFormWidget(
+                        keyboardType: TextInputType.visiblePassword,
+                        nameController: passwordController,
+                        label: "Entrez votre mot de passe",
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Vous devez fourni ce champ";
+                          }
+                          return null;
+                        },
+                        obscure: _secureText,
+                        suffix: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _secureText = !_secureText;
+                              });
+                            },
+                            child: _secureText
+                                ? const Icon(Icons.visibility)
+                                : const Icon(Icons.visibility_off))),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    InputFormWidget(
+                      keyboardType: TextInputType.visiblePassword,
+                      nameController: passConfirmController,
+                      label: "Entrez a nouveau le mot de passe",
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Vous devez fourni ce champ";
+                        } else if (value != passwordController.text) {
+                          return "Donnée non identique";
+                        }
+                        return null;
+                      },
+                      obscure: _secureText,
+                      suffix: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _secureText = !_secureText;
+                            });
+                          },
+                          child: _secureText
+                              ? const Icon(Icons.visibility)
+                              : const Icon(Icons.visibility_off)),
+                    ),
+                  ])),
               const SizedBox(
-                height: 20,
-              ),
-              InputFormWidget(
-                  nameController: firstNameController,
-                  label: "Entrez votre/vos prénoms",
-                  obscure: false),
-              const SizedBox(
-                height: 20,
-              ),
-              InputFormWidget(
-                  nameController: emailController,
-                  label: "Entrez votre email",
-                  obscure: false),
-              const SizedBox(
-                height: 20,
-              ),
-              InputFormWidget(
-                  nameController: telController,
-                  label: "Entrez votre contact",
-                  obscure: false),
-              const SizedBox(
-                height: 20,
-              ),
-              InputFormWidget(
-                  nameController: passwordController,
-                  label: "Entrez votre password",
-                  obscure: false),const SizedBox(
                 height: 20,
               ),
               const Align(
@@ -93,7 +180,6 @@ class _SignupState extends State<Signup> {
                       fontWeight: FontWeight.bold),
                 ),
               ),
-              
 
               Theme(
                 data: Theme.of(context)
@@ -143,21 +229,37 @@ class _SignupState extends State<Signup> {
               ButtonWidget(
                 text: "Inscription",
                 tap: () {
-                  var login =
-                      Provider.of<AuthController>(context, listen: false).register(
-                        lastname: lastNameController.text.trim(),
-                        firstname: firstNameController.text.trim(), 
-                        sexe: groupValue, 
-                        contact: telController.text.trim() as int, 
-                        email: emailController.text.trim(), 
-                        password: passwordController.text.trim());
-                          // .get_all_users();
-                  login.then((value) => value == true
-                      ? Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
+                  if (_formkey.currentState!.validate()) {
+                    var signIn =
+                        Provider.of<AuthController>(context, listen: false)
+                            .register(
+                                lastname: lastNameController.text.trim(),
+                                firstname: firstNameController.text.trim(),
+                                sexe: groupValue,
+                                contact: telController.text.trim(),
+                                email: emailController.text.trim(),
+                                password: passwordController.text.trim());
+                    // .get_all_users();
+                    signIn.then((value) {
+                      if (value['success']) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                          value['message'],
+                          textAlign: TextAlign.center,
+                        )));
+                        return Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
                           return const Login();
-                        }))
-                      : null);
+                        }));
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                          value['message'],
+                          textAlign: TextAlign.center,
+                        )));
+                      }
+                    });
+                  }
                 },
               ),
               FittedBox(
@@ -177,7 +279,7 @@ class _SignupState extends State<Signup> {
                       onPressed: () {
                         //signup screen
                         Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
+                            MaterialPageRoute(builder: (context) {
                           return const Login();
                         }));
                       },

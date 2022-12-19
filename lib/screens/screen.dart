@@ -3,7 +3,6 @@ import 'package:guests/screens/events/eventsFiltre.dart';
 
 import 'Notifications.dart';
 import 'Profile.dart';
-import 'events/CreatEvent.dart';
 import 'qrScreen.dart';
 
 class Screen extends StatefulWidget {
@@ -21,16 +20,7 @@ class _ScreenState extends State<Screen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: screen[currentScreen],
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color.fromRGBO(32, 49, 92, 1),
-        onPressed: () =>
-            // Provider.of<EventController>(context, listen: false).events_list(),
-        Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                        return const CreatEvent();
-                      })),
-        child: const Icon(Icons.add, color: Colors.white,),
-      ),
+      
       bottomNavigationBar: Theme(
           data: Theme.of(context).copyWith(
               canvasColor:

@@ -5,6 +5,7 @@ import 'package:guests/widgets/ButtonWidget.dart';
 import 'package:guests/widgets/InputFormWidget.dart';
 import 'package:provider/provider.dart';
 
+import '../../controllers/auth.dart';
 import '../../controllers/events.dart';
 
 class CreatEvent extends StatefulWidget {
@@ -306,7 +307,7 @@ class _CreatEventState extends State<CreatEvent> {
                 tap: () {
                  var event = Provider.of<EventController>(context, listen: false)
                       .create_Event(
-                          idUser: "1",
+                          idUser: Provider.of<AuthController>(context, listen: false).user.id.toString(),
                           titre: eventNameController.text,
                           slogan: sloganController.text,
                           description: descriptController.text,

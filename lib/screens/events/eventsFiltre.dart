@@ -5,6 +5,7 @@ import '../../controllers/auth.dart';
 import '../../controllers/events.dart';
 import '../../models.dart/events.dart';
 import '../../models.dart/user.dart';
+import 'CreatEvent.dart';
 import 'EventDetails.dart';
 
 class EventsFiltre extends StatelessWidget {
@@ -15,14 +16,10 @@ class EventsFiltre extends StatelessWidget {
     User user = Provider.of<AuthController>(context, listen: false).user;
     return DefaultTabController(length: 3, child:Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: true,
         elevation: 0.0,
         backgroundColor: const Color(0xFF19173D),
-        // leading: IconButton(
-        //     onPressed: () {
-        //       //Back
-        //     },
-        //     icon: const Icon(Icons.arrow_back_ios)),
         title: const Text(
           "Mes Events",
           style: TextStyle(
@@ -43,7 +40,16 @@ class EventsFiltre extends StatelessWidget {
         EventListScreen2(user: user),
         EventListScreen3(user: user),
 
-      ]) )
+      ]) ,floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color.fromRGBO(32, 49, 92, 1),
+        onPressed: () =>
+            // Provider.of<EventController>(context, listen: false).events_list(),
+        Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                        return const CreatEvent();
+                      })),
+        child: const Icon(Icons.add, color: Colors.white,),
+      ),)
     );
   }
 }

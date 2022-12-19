@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'auth/Login.dart';
 
@@ -21,7 +22,12 @@ class _SplashScreenState extends State<SplashScreen> {
             })));
     super.initState();
   }
-
+@override
+  Future<void> didChangeDependencies() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.getString("mail");
+    super.didChangeDependencies();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

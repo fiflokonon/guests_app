@@ -49,7 +49,7 @@ String authToken;
     }
       }
 
-Future <bool> create_Invitation({required String idEvent,required String nom_prenoms,required String place}) async{
+Future <Map> create_Invitation({required String idEvent,required String nom_prenoms,required String place}) async{
         try {
       final response = await http.post(
         Uri.parse('$url/events/$idEvent/invitations'),
@@ -64,26 +64,27 @@ Future <bool> create_Invitation({required String idEvent,required String nom_pre
       );
       final invitation = json.decode(response.body);
       print("===== $invitation");
-      try {
+      if(invitation['success']) {
         Invitation data = Invitation(
-          id: invitation[0]['id'], 
-          id_evenement: invitation[0]["id_evenement"], 
-          place: invitation[0]["place"], 
-          retour: invitation[0]["retour"], 
-          statut_envoye: invitation[0]["statut_envoye"], 
-          nom_prenoms: invitation[0]["nom_prenoms"], 
-          lien_carte: invitation[0]["lien_carte"].toString(), 
-          lien_code: invitation[0]["lien_code"], 
-          created_at: invitation[0]["created_at"]);
+          id: invitation['response'][0]['id'], 
+          id_evenement: invitation['response'][0]["id_evenement"], 
+          place: invitation['response'][0]["place"], 
+          retour: invitation['response'][0]["retour"], 
+          statut_envoye: invitation['response'][0]["statut_envoye"], 
+          nom_prenoms: invitation['response'][0]["nom_prenoms"], 
+          lien_carte: invitation['response'][0]["lien_carte"].toString(), 
+          lien_code: invitation['response'][0]["lien_code"], 
+          created_at: invitation['response'][0]["created_at"]);
           _items.add(data);
           notifyListeners();
-      return true;
-      } catch (e) {
-        return false;
+      return {'success': true, 'message': "Invitation enregistrée"};
+      } else {
+        print("************* error sh false");
+        return {'success': false, 'message': invitation['message']};
       }
     } catch (error) {
       print("*** error $error");
-      return false;
+      return {'success': false, 'message': "Erreur de creation de l'invitation"};
     }
       }
 
